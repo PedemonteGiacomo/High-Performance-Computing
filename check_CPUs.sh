@@ -1,0 +1,93 @@
+#!/bin/bash
+
+CPU_PATH="/sys/devices/system/cpu"
+
+echo "CPU characteristics:"
+echo "----------------------------------"
+echo "Kernel max: $(cat $CPU_PATH/kernel_max)"
+echo "Online: $(cat $CPU_PATH/online)"
+echo "Present: $(cat $CPU_PATH/present)"
+echo "Modalias: $(cat $CPU_PATH/modalias)"
+echo "Possible: $(cat $CPU_PATH/possible)"
+echo "U-Event: $(cat $CPU_PATH/uevent)"
+echo "=================================="
+echo " "
+echo "Cpuidle:"
+echo "----------------------------------"
+CPU_PATH_CPUIDLE="/sys/devices/system/cpu/cpuidle"
+echo "Available_governors: $(cat $CPU_PATH_CPUIDLE/available_governors)"
+echo "Current_driver: $(cat $CPU_PATH_CPUIDLE/current_driver)"
+echo "Current_governor: $(cat $CPU_PATH_CPUIDLE/current_governor)"
+echo "Current_governor_ro: $(cat $CPU_PATH_CPUIDLE/current_governor_ro)"
+echo "=================================="
+echo " "
+echo "Hotplug:"
+echo "----------------------------------"
+CPU_PATH_HOTPLUG="/sys/devices/system/cpu/hotplug"
+echo "Hotplug-states: $(cat $CPU_PATH_HOTPLUG/states)"
+echo "=================================="
+echo " "
+echo "Power:"
+echo "----------------------------------"
+CPU_PATH_POWER="/sys/devices/system/cpu/power"
+echo "async: $(cat $CPU_PATH_POWER/async)"
+echo "control: $(cat $CPU_PATH_POWER/control)"
+echo "runtime_active_time: $(cat $CPU_PATH_POWER/runtime_active_time)"
+echo "runtime_status: $(cat $CPU_PATH_POWER/runtime_status)"
+echo "runtime_usage: $(cat $CPU_PATH_POWER/runtime_usage)"
+echo "autosuspend_delay_ms: $(cat $CPU_PATH_POWER/autosuspend_delay_ms)"
+echo "runtime_active_kids: $(cat $CPU_PATH_POWER/runtime_active_kids)"
+echo "runtime_enabled: $(cat $CPU_PATH_POWER/runtime_enabled)"
+echo "runtime_suspended_time: $(cat $CPU_PATH_POWER/runtime_suspended_time)"
+echo "=================================="
+echo " "
+echo "SMT:"
+echo "----------------------------------"
+CPU_PATH_SMT="/sys/devices/system/cpu/smt"
+echo "active: $(cat $CPU_PATH_SMT/active)"
+echo "control: $(cat $CPU_PATH_SMT/control)"
+echo "=================================="
+echo " "
+echo "Vulnerabilities:"
+echo "----------------------------------"
+CPU_PATH_VULNERABILITIES="/sys/devices/system/cpu/vulnerabilities"
+echo "itlb_multihit: $(cat $CPU_PATH_VULNERABILITIES/itlb_multihit)"
+echo "mds: $(cat $CPU_PATH_VULNERABILITIES/mds)"
+echo "mmio_stale_data: $(cat $CPU_PATH_VULNERABILITIES/mmio_stale_data)"
+echo "spec_store_bypass: $(cat $CPU_PATH_VULNERABILITIES/spec_store_bypass)"
+echo "spectre_v2: $(cat $CPU_PATH_VULNERABILITIES/spectre_v2)"
+echo "tsx_async_abort: $(cat $CPU_PATH_VULNERABILITIES/tsx_async_abort)"
+echo "l1tf: $(cat $CPU_PATH_VULNERABILITIES/l1tf)"
+echo "meltdown: $(cat $CPU_PATH_VULNERABILITIES/meltdown)"
+echo "retbleed: $(cat $CPU_PATH_VULNERABILITIES/retbleed)"
+echo "spectre_v1: $(cat $CPU_PATH_VULNERABILITIES/spectre_v1)"
+echo "srbds: $(cat $CPU_PATH_VULNERABILITIES/srbds)"
+echo "=================================="
+echo " "
+echo "CACHES INFORMATIONS"
+echo "----------------------------------"
+
+for cpu in {0..1} # Assuming you have CPU cores 0 and 1
+do
+    CACHE_PATH="/sys/devices/system/cpu/cpu$cpu/cache"
+    
+    echo "CPU $cpu Cache Information:"
+    
+    for index in {0..3} # Assuming you have index levels from 0 to 3
+    do
+        INDEX_PATH="$CACHE_PATH/index$index"
+        
+        if [ -d "$INDEX_PATH" ]; then
+            echo "Cache Index $index:"
+            echo "Size: $(cat $INDEX_PATH/size)"
+            echo "Type: $(cat $INDEX_PATH/type)"
+            echo "Ways of Associativity: $(cat $INDEX_PATH/ways_of_associativity)"
+            echo "Coherency Line Size: $(cat $INDEX_PATH/coherency_line_size)"
+            echo "---------------------------------------------"
+        else
+            echo "Cache Index $index not found."
+        fi
+    done
+    
+    echo "============================================="
+done
